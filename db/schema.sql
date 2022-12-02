@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS member_db;
+
+CREATE DATABASE member_db;
