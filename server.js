@@ -3,8 +3,10 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const cTable = require('console.table');
-const { response } = require("express");
+const figlet = require('figlet');
+
 require("dotenv").config()
+
 const db = mysql.createConnection({
     host:'localhost',
     user:process.env.DB_USER,
@@ -12,11 +14,18 @@ const db = mysql.createConnection({
     database:process.env.DB_NAME
 })
 db.connect(function(){
-    console.log("Welecome to Emp tracker")
-    promptUser()
-})
+    console.log("Welecome to Employee Tracker Application");
+    figlet('Employee Tracker', function(err, data) {
+        if(err) {
+            console.log("Something Went Wrong")            
+        } else {
+            console.log(data);
+        }        
+        promptUser();
+    });
+});
 
-const promtUser = () => {
+const promptUser = () => {
     inquirer.prompt([
         {
             type: 'list',
