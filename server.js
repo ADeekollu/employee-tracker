@@ -39,8 +39,7 @@ const promptUser = () => {
                     'Add a role',
                     'Add an employee',
                     'Update an employee role',
-                    'Update employee manager',
-                    'View employees by manager',
+                    'Update employee manager',                    
                     'Delete a department',
                     'Delete a role',
                     'Delete an employee',
@@ -74,10 +73,7 @@ const promptUser = () => {
                 break;
             case 'Update employee manager':
                 updateEmployeeManager();
-                break;
-            case 'View employees by manager':
-                viewEmployeeManager();
-                break;
+                break;        
             case 'Delete a department':
                 deleteDepartment();
                 break;
@@ -467,6 +463,36 @@ function deleteEmployee() {
     });
 };
 
+function viewBudget() {
+    db.query('select * from department', (err, res) => {
+        if(err) throw err;
 
+        const departmentChoice = [];
+        res.forEach(({ name, id}) => {
+            departmentChoice.push({
+                name: name,
+                value: id
+            });
+        });
 
+        let questions = [
+            {
+                type: 'list',
+                name: 'id',
+                choices: departmentChoice,
+                message: "Which department's budget do you want to see?"
+            }
+        ];
+
+        inquirer.prompt(questions)
+            .then(response => {
+                const query = `select d.name, sum(salary) as budget from employee as e left join role as r on e.role_id = r.id left join department as d on r.department_id = d.id where d.id = ?`;
+                db.query(query, [response.id], (err, res) => {
+                    if(err) throw err;
+                    console.table(res);
+                    promptUser();
+                });
+            });
+    });
+};
 
