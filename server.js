@@ -287,18 +287,20 @@ function updateEmployeeRole() {
 
          inquirer.prompt(questions) 
             .then(response => {
-                const query = `update employee set ? where ?? = ?;`;
+                console.log(response)
+                const query = `update employee set role_id = ? where id = ?;`;
                 db.query(query, [
-                    {role_id: response.role_id},
-                    "id",
+                    response.role_id,
                     response.id
-                ]), (err, res) => {
-                    if(err) throw err;
-
+                ], (err, res) => {
+                    if(err) {
+                        console.log(err)
+                        throw err;
+                    }
                     console.log("Updated Employee's Role");
                     console.table(res);
                     promptUser();
-                }
+                })
             })
         });
 
@@ -350,13 +352,13 @@ function updateEmployeeManager() {
                 db.query(query, [
                     {manager_id: response.manager_id},
                     response.id
-                ]), (err, res) => {
+                ], (err, res) => {
                     if(err) throw err;
                     
                     console.log("Updated Employee's Manager");
                     console.table(res);
                     promptUser();
-                }
+                })
             })
         });
 
